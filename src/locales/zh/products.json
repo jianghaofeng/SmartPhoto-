@@ -1,0 +1,22 @@
+{
+  "addToCart": "加入购物车",
+  "buyNow": "立即购买",
+  "price": "价格",
+  "category": "分类",
+  "rating": "评分",
+  "reviews": "评论",
+  "description": "描述",
+  "specifications": "规格",
+  "relatedProducts": "相关产品",
+  "outOfStock": "缺货",
+  "inStock": "有货",
+  "availability": "库存状态",
+  "quantity": "数量",
+  "discount": "折扣",
+  "sale": "促销",
+  "new": "新品",
+  "bestseller": "畅销",
+  "filter": "筛选",
+  "sort": "排序",
+  "search": "搜索"
+}

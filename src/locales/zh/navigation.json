@@ -1,0 +1,10 @@
+{
+  "home": "首页",
+  "products": "产品",
+  "dashboard": "控制台",
+  "account": "账户",
+  "settings": "设置",
+  "logout": "退出登录",
+  "login": "登录",
+  "register": "注册"
+}

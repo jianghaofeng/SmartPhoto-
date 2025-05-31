@@ -12,6 +12,7 @@ import { Cart } from "~/ui/components/cart";
 import { Button } from "~/ui/primitives/button";
 import { Skeleton } from "~/ui/primitives/skeleton";
 
+import LanguageSwitcher from "../language-switcher";
 import { NotificationsWidget } from "../notifications/notifications-widget";
 import { ThemeToggle } from "../theme-toggle";
 import { HeaderUserDropdown } from "./header-user";
@@ -128,6 +129,9 @@ export function Header({ showAuth = true }: HeaderProps) {
             ) : (
               <NotificationsWidget />
             )}
+
+            {/* Language Switcher */}
+            <LanguageSwitcher />
 
             {showAuth && (
               <div

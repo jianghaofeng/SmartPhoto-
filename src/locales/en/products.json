@@ -1,0 +1,22 @@
+{
+  "addToCart": "Add to Cart",
+  "buyNow": "Buy Now",
+  "price": "Price",
+  "category": "Category",
+  "rating": "Rating",
+  "reviews": "Reviews",
+  "description": "Description",
+  "specifications": "Specifications",
+  "relatedProducts": "Related Products",
+  "outOfStock": "Out of Stock",
+  "inStock": "In Stock",
+  "availability": "Availability",
+  "quantity": "Quantity",
+  "discount": "Discount",
+  "sale": "Sale",
+  "new": "New",
+  "bestseller": "Bestseller",
+  "filter": "Filter",
+  "sort": "Sort",
+  "search": "Search"
+}
