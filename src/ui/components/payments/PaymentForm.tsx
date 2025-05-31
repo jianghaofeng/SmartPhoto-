@@ -4,7 +4,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "~/ui/primitives/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/ui/primitives/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "~/ui/primitives/card";
 import { Alert, AlertDescription, AlertTitle } from "~/ui/primitives/alert";
 
 interface PaymentFormProps {
@@ -31,16 +38,16 @@ export function PaymentForm({
   const handleCheckout = async () => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       let url = "/auth/checkout";
-      
+
       if (productSlug) {
         url += `/${productSlug}`;
       } else if (productId) {
         url += `?productId=${productId}`;
       }
-      
+
       router.push(url);
       if (onSuccess) {
         onSuccess();
@@ -68,8 +75,8 @@ export function PaymentForm({
         )}
       </CardContent>
       <CardFooter>
-        <Button 
-          onClick={handleCheckout} 
+        <Button
+          onClick={handleCheckout}
           disabled={isLoading}
           className="w-full"
         >

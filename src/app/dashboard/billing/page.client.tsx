@@ -8,7 +8,14 @@ import type { PolarSubscription } from "~/db/schema/payments/types";
 
 import { PaymentForm } from "~/ui/components/payments/PaymentForm";
 import { Button } from "~/ui/primitives/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/ui/primitives/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "~/ui/primitives/card";
 import { Alert, AlertDescription, AlertTitle } from "~/ui/primitives/alert";
 import { Skeleton } from "~/ui/primitives/skeleton";
 import { Badge } from "~/ui/primitives/badge";
@@ -47,7 +54,7 @@ export function BillingPageClient({ user }: BillingPageClientProps) {
         if (!response.ok) {
           throw new Error("Failed to fetch subscriptions");
         }
-        const data = await response.json() as SubscriptionsResponse;
+        const data = (await response.json()) as SubscriptionsResponse;
         setSubscriptions(data.subscriptions || []);
       } catch (err) {
         console.error("Error fetching subscriptions:", err);
@@ -59,7 +66,7 @@ export function BillingPageClient({ user }: BillingPageClientProps) {
       try {
         const response = await fetch("/api/payments/customer-state");
         if (response.ok) {
-          const data = await response.json() as CustomerStateResponse;
+          const data = (await response.json()) as CustomerStateResponse;
           setCustomerState(data);
         }
       } catch (err) {
@@ -73,16 +80,18 @@ export function BillingPageClient({ user }: BillingPageClientProps) {
     fetchCustomerState();
   }, [user, router]);
 
-  const hasActiveSubscription = subscriptions.some(sub => sub.status === "active");
+  const hasActiveSubscription = subscriptions.some(
+    (sub) => sub.status === "active",
+  );
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const checkoutSuccess = urlParams.get("checkout_success");
-    
+
     if (checkoutSuccess === "true") {
       const newUrl = window.location.pathname;
       window.history.replaceState({}, document.title, newUrl);
-      
+
       router.refresh();
     }
   }, [router]);
@@ -110,7 +119,7 @@ export function BillingPageClient({ user }: BillingPageClientProps) {
   return (
     <div className="container mx-auto py-10">
       <h1 className="text-3xl font-bold mb-6">Billing</h1>
-      
+
       {error && (
         <Alert variant="destructive" className="mb-6">
           <AlertTitle>Error</AlertTitle>
@@ -131,26 +140,38 @@ export function BillingPageClient({ user }: BillingPageClientProps) {
             {subscriptions.length > 0 ? (
               <div className="space-y-4">
                 {subscriptions.map((subscription) => (
-                  <div key={subscription.id} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div
+                    key={subscription.id}
+                    className="flex items-center justify-between p-4 border rounded-lg"
+                  >
                     <div>
                       <h3 className="font-medium">{subscription.productId}</h3>
                       <p className="text-sm text-muted-foreground">
                         ID: {subscription.subscriptionId}
                       </p>
                     </div>
-                    <Badge variant={subscription.status === "active" ? "default" : "outline"}>
+                    <Badge
+                      variant={
+                        subscription.status === "active" ? "default" : "outline"
+                      }
+                    >
                       {subscription.status}
                     </Badge>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-muted-foreground">You don't have any active subscriptions.</p>
+              <p className="text-muted-foreground">
+                You don't have any active subscriptions.
+              </p>
             )}
           </CardContent>
           <CardFooter>
             {hasActiveSubscription && (
-              <Button variant="outline" onClick={() => router.push("/auth/customer-portal")}>
+              <Button
+                variant="outline"
+                onClick={() => router.push("/auth/customer-portal")}
+              >
                 Manage Subscription
               </Button>
             )}
@@ -161,14 +182,14 @@ export function BillingPageClient({ user }: BillingPageClientProps) {
       {/* Payment Plans */}
       {!hasActiveSubscription && (
         <div className="grid gap-6 md:grid-cols-2">
-          <PaymentForm 
-            productSlug="pro" 
+          <PaymentForm
+            productSlug="pro"
             title="Pro Plan"
             description="Get access to all premium features and priority support."
             buttonText="Subscribe to Pro"
           />
-          <PaymentForm 
-            productSlug="premium" 
+          <PaymentForm
+            productSlug="premium"
             title="Premium Plan"
             description="Everything in Pro plus exclusive content and early access to new features."
             buttonText="Subscribe to Premium"

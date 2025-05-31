@@ -7,7 +7,8 @@ import { polarCustomerTable, polarSubscriptionTable } from "~/db/schema";
 
 const polarClient = new Polar({
   accessToken: process.env.POLAR_ACCESS_TOKEN,
-  server: (process.env.POLAR_ENVIRONMENT as "production" | "sandbox") || "production",
+  server:
+    (process.env.POLAR_ENVIRONMENT as "production" | "sandbox") || "production",
 });
 
 /**
@@ -30,13 +31,15 @@ export async function getCustomerByUserId(userId: string) {
  */
 export async function getCustomerState(userId: string) {
   const customer = await getCustomerByUserId(userId);
-  
+
   if (!customer) {
     return null;
   }
 
   try {
-    const customerState = await polarClient.customers.get({ id: customer.customerId });
+    const customerState = await polarClient.customers.get({
+      id: customer.customerId,
+    });
     return customerState;
   } catch (error) {
     console.error("Error fetching customer state:", error);
@@ -58,7 +61,11 @@ export async function getUserSubscriptions(userId: string) {
 /**
  * Create a new customer in Polar and save reference in database
  */
-export async function createCustomer(userId: string, email: string, name?: string) {
+export async function createCustomer(
+  userId: string,
+  email: string,
+  name?: string,
+) {
   try {
     const customer = await polarClient.customers.create({
       email,
@@ -92,9 +99,10 @@ export async function syncSubscription(
   status: string,
 ) {
   try {
-    const existingSubscription = await db.query.polarSubscriptionTable.findFirst({
-      where: eq(polarSubscriptionTable.subscriptionId, subscriptionId),
-    });
+    const existingSubscription =
+      await db.query.polarSubscriptionTable.findFirst({
+        where: eq(polarSubscriptionTable.subscriptionId, subscriptionId),
+      });
 
     if (existingSubscription) {
       await db
@@ -130,13 +138,16 @@ export async function syncSubscription(
  */
 export async function hasActiveSubscription(userId: string): Promise<boolean> {
   const subscriptions = await getUserSubscriptions(userId);
-  return subscriptions.some(sub => sub.status === "active");
+  return subscriptions.some((sub) => sub.status === "active");
 }
 
 /**
  * Get checkout URL for a specific product
  */
-export async function getCheckoutUrl(customerId: string, productSlug: string): Promise<string | null> {
+export async function getCheckoutUrl(
+  customerId: string,
+  productSlug: string,
+): Promise<string | null> {
   try {
     const checkout = await polarClient.checkouts.create({
       customerId,

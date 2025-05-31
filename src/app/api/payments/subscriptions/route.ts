@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 import { getUserSubscriptions } from "~/api/payments/service";
 import { getCurrentUser } from "~/lib/auth";
@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
   if (!user) {
     return new NextResponse(
       JSON.stringify({ error: "Authentication required" }),
-      { status: 401 }
+      { status: 401 },
     );
   }
 
@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     console.error("Error fetching subscriptions:", error);
     return new NextResponse(
       JSON.stringify({ error: "Failed to fetch subscriptions" }),
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
