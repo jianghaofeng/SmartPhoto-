@@ -48,16 +48,25 @@ export async function POST(req: Request) {
     const key = `url-${createId()}`;
 
     // Insert into database
+    const newId = createId();
     await db.insert(uploadsTable).values({
       createdAt: new Date(),
-      id: createId(),
+      id: newId,
       key,
       type,
       url,
       userId: session.user.id,
     });
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({
+      data: {
+        id: newId,
+        key,
+        type,
+        url
+      },
+      success: true
+    });
   } catch (error) {
     console.error("Error uploading from URL:", error);
     return NextResponse.json(
