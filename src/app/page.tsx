@@ -113,11 +113,6 @@ export default function HomePage() {
     console.log("File upload clicked");
   };
 
-  const handleSampleClick = (index: number) => {
-    // 处理示例图片点击逻辑
-    console.log(`Sample ${index + 1} clicked`);
-  };
-
   return (
     <div className="min-h-screen bg-background">
       <section className="bg-black text-white">
@@ -162,7 +157,11 @@ export default function HomePage() {
 
               {/* 彩色照片堆叠容器 */}
               <div
-                className="absolute flex items-center justify-center"
+                className={`
+                  group absolute flex items-center justify-center transition-all
+                  duration-500
+                  hover:scale-105
+                `}
                 style={{
                   height: "clamp(232px, 26.1vw, 387px)",
                   left: "80%",
@@ -176,6 +175,8 @@ export default function HomePage() {
                 <div
                   className={`
                     absolute overflow-hidden rounded-xl bg-white shadow-xl
+                    transition-transform duration-300
+                    group-hover:translate-x-[-12%] group-hover:rotate-[-35deg]
                   `}
                   style={{
                     backfaceVisibility: "hidden",
@@ -197,7 +198,11 @@ export default function HomePage() {
 
                 {/* 彩色照片2 - 中间突出 */}
                 <div
-                  className="absolute overflow-hidden rounded-xl bg-white"
+                  className={`
+                    absolute overflow-hidden rounded-xl bg-white transition-all
+                    duration-300
+                    group-hover:scale-[1.3]
+                  `}
                   style={{
                     backfaceVisibility: "hidden",
                     boxShadow:
@@ -222,6 +227,8 @@ export default function HomePage() {
                 <div
                   className={`
                     absolute overflow-hidden rounded-xl bg-white shadow-xl
+                    transition-transform duration-300
+                    group-hover:translate-x-[12%] group-hover:rotate-[35deg]
                   `}
                   style={{
                     backfaceVisibility: "hidden",
@@ -434,19 +441,24 @@ export default function HomePage() {
                     return (
                       <Card
                         className={`
-                          flex-shrink-0 transition-all duration-300
+                          relative flex-shrink-0 transition-all duration-300
+                          hover:z-10 hover:scale-105
                           ${
                             isActive
-                              ? "scale-100 opacity-100"
+                              ? "z-[5] scale-100 opacity-100"
                               : isFaded
-                              ? `scale-90 opacity-30`
-                              : `scale-95 opacity-70`
+                                ? `scale-90 opacity-30`
+                                : `scale-95 opacity-70`
                           }
                         `}
                         key={index}
                       >
-                        <CardContent className="p-6">
-                          <div className="grid grid-cols-2 gap-4">
+                        <CardContent className="p-0">
+                          <div
+                            className={`
+                              grid grid-cols-2 gap-0 overflow-hidden rounded-xl
+                            `}
+                          >
                             <div className="relative">
                               <div
                                 className={`
@@ -458,7 +470,7 @@ export default function HomePage() {
                               </div>
                               <Image
                                 alt={`${item.alt} Before`}
-                                className="rounded-lg"
+                                className=""
                                 height={250}
                                 src={item.before}
                                 width={200}
@@ -475,7 +487,7 @@ export default function HomePage() {
                               </div>
                               <Image
                                 alt={`${item.alt} After`}
-                                className="rounded-lg"
+                                className=""
                                 height={250}
                                 src={item.after}
                                 width={200}
@@ -516,7 +528,7 @@ export default function HomePage() {
                 disabled={activeSlide === beforeAfterImages.length - 1}
                 onClick={() =>
                   setActiveSlide(
-                    Math.min(beforeAfterImages.length - 1, activeSlide + 1)
+                    Math.min(beforeAfterImages.length - 1, activeSlide + 1),
                   )
                 }
                 size="icon"
@@ -561,39 +573,46 @@ export default function HomePage() {
               <div className="animate-scroll-left mb-6 flex space-x-6">
                 {[...testimonials, ...testimonials].map(
                   (testimonial, index) => (
-                    <Card className="w-80 flex-shrink-0" key={`top-${index}`}>
-                      <CardContent className="p-6">
-                        <div className="flex items-start space-x-4">
-                          <div
-                            className="h-10 w-10 flex-shrink-0 rounded-full"
-                            style={{ background: testimonial.avatar }}
-                          />
-                          <div className="flex-1 space-y-2">
-                            <div className="flex items-center space-x-2">
-                              <span className="text-sm font-semibold">
+                    <Card
+                      className="h-[200px] w-[200px] flex-shrink-0"
+                      key={`top-${index}`}
+                    >
+                      <CardContent className="h-full p-4">
+                        <div className="flex h-full flex-col">
+                          <div className="mb-2 flex items-center space-x-3">
+                            <div
+                              className="h-10 w-10 flex-shrink-0 rounded-full"
+                              style={{ background: testimonial.avatar }}
+                            />
+                            <div>
+                              <div className="text-sm font-semibold">
                                 {testimonial.user}
-                              </span>
-                              <span className="text-sm text-muted-foreground">
+                              </div>
+                              <div className="text-xs text-muted-foreground">
                                 {testimonial.handle}
-                              </span>
+                              </div>
                             </div>
-                            <p className="text-sm text-muted-foreground">
-                              {testimonial.text}
-                            </p>
-                            {testimonial.image && (
-                              <Image
-                                alt="User work"
-                                className="mt-2 rounded-lg"
-                                height={150}
-                                src={testimonial.image}
-                                width={200}
-                              />
-                            )}
                           </div>
+                          <p
+                            className={`
+                              mb-auto line-clamp-3 text-xs text-muted-foreground
+                            `}
+                          >
+                            {testimonial.text}
+                          </p>
+                          {testimonial.image && (
+                            <Image
+                              alt="User work"
+                              className="mt-2 rounded-lg"
+                              height={80}
+                              src={testimonial.image}
+                              width={160}
+                            />
+                          )}
                         </div>
                       </CardContent>
                     </Card>
-                  )
+                  ),
                 )}
               </div>
 
@@ -603,35 +622,42 @@ export default function HomePage() {
                   ...testimonials.slice().reverse(),
                   ...testimonials.slice().reverse(),
                 ].map((testimonial, index) => (
-                  <Card className="w-80 flex-shrink-0" key={`bottom-${index}`}>
-                    <CardContent className="p-6">
-                      <div className="flex items-start space-x-4">
-                        <div
-                          className="h-10 w-10 flex-shrink-0 rounded-full"
-                          style={{ background: testimonial.avatar }}
-                        />
-                        <div className="flex-1 space-y-2">
-                          <div className="flex items-center space-x-2">
-                            <span className="text-sm font-semibold">
+                  <Card
+                    className="h-[200px] w-[200px] flex-shrink-0"
+                    key={`bottom-${index}`}
+                  >
+                    <CardContent className="h-full p-4">
+                      <div className="flex h-full flex-col">
+                        <div className="mb-2 flex items-center space-x-3">
+                          <div
+                            className="h-10 w-10 flex-shrink-0 rounded-full"
+                            style={{ background: testimonial.avatar }}
+                          />
+                          <div>
+                            <div className="text-sm font-semibold">
                               {testimonial.user}
-                            </span>
-                            <span className="text-sm text-muted-foreground">
+                            </div>
+                            <div className="text-xs text-muted-foreground">
                               {testimonial.handle}
-                            </span>
+                            </div>
                           </div>
-                          <p className="text-sm text-muted-foreground">
-                            {testimonial.text}
-                          </p>
-                          {testimonial.image && (
-                            <Image
-                              alt="User work"
-                              className="mt-2 rounded-lg"
-                              height={150}
-                              src={testimonial.image}
-                              width={200}
-                            />
-                          )}
                         </div>
+                        <p
+                          className={`
+                            mb-auto line-clamp-3 text-xs text-muted-foreground
+                          `}
+                        >
+                          {testimonial.text}
+                        </p>
+                        {testimonial.image && (
+                          <Image
+                            alt="User work"
+                            className="mt-2 rounded-lg"
+                            height={80}
+                            src={testimonial.image}
+                            width={160}
+                          />
+                        )}
                       </div>
                     </CardContent>
                   </Card>
@@ -695,13 +721,19 @@ export default function HomePage() {
       </section>
 
       {/* Final CTA Section */}
-      <section className="bg-gradient-to-r from-primary to-primary/80 py-20">
+      <section
+        className={`
+          from-primary to-primary/80 py-20
+          dark:bg-black
+        `}
+      >
         <div className="container mx-auto px-4">
           <div className="space-y-8 text-center">
             <h2
               className={`
                 text-3xl font-bold text-primary-foreground
                 lg:text-4xl
+                dark:text-white
               `}
             >
               {t("millionPhotosColorized")}
@@ -710,6 +742,7 @@ export default function HomePage() {
               className={`
                 bg-white px-8 py-4 text-lg font-semibold text-primary
                 hover:bg-white/90
+                dark:bg-white dark:text-black dark:hover:bg-gray-100
               `}
               onClick={handleFileUpload}
               size="lg"

@@ -12,6 +12,7 @@ import I18nProvider from "~/lib/i18n-provider";
 import "~/css/globals.css";
 import { Footer } from "~/ui/components/footer";
 import { Header } from "~/ui/components/header/header";
+import { StagewiseToolbar } from "~/ui/components/stagewise-toolbar";
 import { ThemeProvider } from "~/ui/components/theme-provider";
 import { Toaster } from "~/ui/primitives/sonner";
 
@@ -44,7 +45,7 @@ export default function RootLayout({
           min-h-screen bg-gradient-to-br from-white to-slate-100
           text-neutral-900 antialiased
           selection:bg-primary/80
-          dark:from-neutral-950 dark:to-neutral-900 dark:text-neutral-100
+          dark:from-black dark:to-black dark:text-neutral-100
         `}
       >
         <ThemeProvider
@@ -64,6 +65,7 @@ export default function RootLayout({
           </I18nProvider>
         </ThemeProvider>
         <SpeedInsights />
+        <StagewiseToolbar />
       </body>
     </html>
   );

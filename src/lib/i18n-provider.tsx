@@ -3,11 +3,15 @@
 import i18next from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import resourcesToBackend from "i18next-resources-to-backend";
-import { type PropsWithChildren, useEffect, useState } from "react";
+import { type PropsWithChildren, useEffect } from "react";
 import { I18nextProvider } from "react-i18next";
 import { initReactI18next } from "react-i18next";
 
-import { languageConfig, type SupportedLanguage } from "./i18n";
+import {
+  defaultLanguage,
+  languageConfig,
+  type SupportedLanguage,
+} from "./i18n";
 import { getClientLanguage, setClientLanguage } from "./language-utils";
 
 // 创建 i18next 实例
@@ -29,14 +33,17 @@ i18next
     interpolation: {
       escapeValue: false,
     },
-    lng: getClientLanguage(),
+    // 默认使用英文，避免水合错误
+    lng: defaultLanguage,
   });
 
 export default function I18nProvider({ children }: PropsWithChildren) {
-  const [isClient, setIsClient] = useState(false);
-
   useEffect(() => {
-    setIsClient(true);
+    // 客户端加载后，再根据用户偏好切换语言
+    const userPreferredLanguage = getClientLanguage();
+    if (userPreferredLanguage !== i18next.language) {
+      i18next.changeLanguage(userPreferredLanguage);
+    }
 
     // 确保客户端语言偏好在组件挂载时被设置
     const currentLang = i18next.language as SupportedLanguage;
@@ -53,11 +60,6 @@ export default function I18nProvider({ children }: PropsWithChildren) {
       i18next.off("languageChanged", handleLanguageChanged);
     };
   }, []);
-
-  // 在服务端渲染期间，直接返回子组件
-  if (!isClient) {
-    return <>{children}</>;
-  }
 
   return <I18nextProvider i18n={i18next}>{children}</I18nextProvider>;
 }
