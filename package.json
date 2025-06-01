@@ -16,6 +16,8 @@
     "tests": "bun test ./.tests"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.821.0",
+    "@aws-sdk/s3-request-presigner": "^3.821.0",
     "@paralleldrive/cuid2": "^2.2.2",
     "@polar-sh/better-auth": "^0.1.1",
     "@polar-sh/sdk": "^0.32.13",

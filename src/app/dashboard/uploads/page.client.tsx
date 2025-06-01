@@ -9,6 +9,7 @@ import type { GalleryMediaItem } from "~/ui/components/blocks/bento-media-galler
 
 import { UploadButton } from "~/lib/uploadthing";
 import { BentoMediaGallery } from "~/ui/components/blocks/bento-media-gallery";
+import { S3UploadButton } from "~/ui/components/s3-upload-button";
 import { Alert, AlertDescription, AlertTitle } from "~/ui/primitives/alert";
 import { Button } from "~/ui/primitives/button";
 import { Input } from "~/ui/primitives/input";
@@ -38,7 +39,9 @@ export default function UploadsPageClient() {
         desc: `Uploaded on ${new Date(upload.createdAt).toLocaleDateString()}`,
         id: upload.id,
         span: "md:col-span-1 md:row-span-2 sm:col-span-1 sm:row-span-2",
-        title: `${upload.type === "image" ? "Image" : "Video"} ${upload.key.substring(0, 8)}...`,
+        title: `${
+          upload.type === "image" ? "Image" : "Video"
+        } ${upload.key.substring(0, 8)}...`,
         type: upload.type,
         url: upload.url,
       }));
@@ -47,7 +50,7 @@ export default function UploadsPageClient() {
       console.error(err);
       toast.error("Failed to load media");
       setError(
-        err instanceof Error ? err.message : "An unknown error occurred",
+        err instanceof Error ? err.message : "An unknown error occurred"
       );
     } finally {
       setIsMediaLoading(false);
@@ -84,7 +87,7 @@ export default function UploadsPageClient() {
       console.error(err);
       toast.error("Failed to upload from URL");
       setError(
-        err instanceof Error ? err.message : "Failed to upload from URL",
+        err instanceof Error ? err.message : "Failed to upload from URL"
       );
     } finally {
       setIsUploadingFromUrl(false);
@@ -121,27 +124,58 @@ export default function UploadsPageClient() {
   return (
     <div className="space-y-8">
       <div className="space-y-4">
-        <div className="flex gap-4">
-          <UploadButton
-            endpoint="imageUploader"
-            onClientUploadComplete={(res) => {
-              console.log("Image(s) uploaded: ", res);
-              void loadMediaGallery();
-            }}
-            onUploadError={(uploadError: Error) => {
-              toast.error(`Image Upload ERROR! ${uploadError.message}`);
-            }}
-          />
-          <UploadButton
-            endpoint="videoUploader"
-            onClientUploadComplete={(res) => {
-              console.log("Video(s) uploaded: ", res);
-              void loadMediaGallery();
-            }}
-            onUploadError={(uploadError: Error) => {
-              toast.error(`Video Upload ERROR! ${uploadError.message}`);
-            }}
-          />
+        <div className="space-y-4">
+          <div className="flex gap-4">
+            <UploadButton
+              endpoint="imageUploader"
+              onClientUploadComplete={(res) => {
+                console.log("Image(s) uploaded: ", res);
+                void loadMediaGallery();
+              }}
+              onUploadError={(uploadError: Error) => {
+                toast.error(`Image Upload ERROR! ${uploadError.message}`);
+              }}
+            />
+            <UploadButton
+              endpoint="videoUploader"
+              onClientUploadComplete={(res) => {
+                console.log("Video(s) uploaded: ", res);
+                void loadMediaGallery();
+              }}
+              onUploadError={(uploadError: Error) => {
+                toast.error(`Video Upload ERROR! ${uploadError.message}`);
+              }}
+            />
+          </div>
+          <div className="border-t pt-4">
+            <h3 className="mb-2 text-sm font-medium text-muted-foreground">
+              AWS S3 Upload
+            </h3>
+            <div className="flex gap-4">
+              <S3UploadButton
+                accept="image/*"
+                onUploadComplete={() => {
+                  void loadMediaGallery();
+                }}
+                onUploadError={(error) => {
+                  toast.error(`S3 Image Upload ERROR! ${error}`);
+                }}
+              >
+                Upload Images to S3
+              </S3UploadButton>
+              <S3UploadButton
+                accept="video/*"
+                onUploadComplete={() => {
+                  void loadMediaGallery();
+                }}
+                onUploadError={(error) => {
+                  toast.error(`S3 Video Upload ERROR! ${error}`);
+                }}
+              >
+                Upload Videos to S3
+              </S3UploadButton>
+            </div>
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <div className="relative flex-1">
