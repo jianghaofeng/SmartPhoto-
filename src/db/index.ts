@@ -26,7 +26,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 // Database connection instance
-export const db = drizzle(conn, {
+export const db = drizzle(conn as any, {
   logger: DB_DEV_LOGGER && process.env.NODE_ENV !== "production",
   schema,
 });

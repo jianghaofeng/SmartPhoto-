@@ -57,7 +57,7 @@ const editFunctions: {
     description: "使用蒙版精确编辑指定区域",
     label: "蒙版编辑",
     requiresMask: true,
-    value: "edit_with_mask",
+    value: "description_edit_with_mask",
   },
   {
     description: "去除图片中的文字水印",
@@ -72,7 +72,7 @@ const editFunctions: {
   {
     description: "提升图片分辨率",
     label: "图像超分",
-    value: "super_resolution",
+    value: "expand",
   },
   {
     description: "为黑白图片添加颜色",
@@ -264,9 +264,9 @@ export function ImageEditForm({
           {/* 提交按钮 */}
           <Button
             className={`
-            w-full bg-blue-600
-            hover:bg-blue-700
-          `}
+              w-full bg-blue-600
+              hover:bg-blue-700
+            `}
             disabled={isLoading}
             type="submit"
           >

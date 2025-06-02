@@ -202,7 +202,7 @@ export function ImageEditTaskCard({
                     <img
                       alt={`编辑结果 ${result.id}`}
                       className="h-32 w-full rounded object-cover"
-                      src={result.imageUrl}
+                      src={result.resultImageUrl}
                     />
                   </div>
                   <div className="flex gap-2">
@@ -211,7 +211,9 @@ export function ImageEditTaskCard({
                         flex-1 border-slate-600 text-slate-300
                         hover:bg-slate-700 hover:text-white
                       `}
-                      onClick={() => window.open(result.imageUrl, "_blank")}
+                      onClick={() =>
+                        window.open(result.resultImageUrl, "_blank")
+                      }
                       size="sm"
                       variant="outline"
                     >
@@ -224,7 +226,7 @@ export function ImageEditTaskCard({
                         hover:bg-slate-700 hover:text-white
                       `}
                       disabled={
-                        savingResultId === result.id || !!result.localImageId
+                        savingResultId === result.id || !!result.savedImageId
                       }
                       onClick={() => handleSaveResult(result.id)}
                       size="sm"
@@ -233,7 +235,7 @@ export function ImageEditTaskCard({
                       <Download className="mr-1 h-4 w-4" />
                       {savingResultId === result.id
                         ? "保存中..."
-                        : result.localImageId
+                        : result.savedImageId
                         ? "已保存"
                         : "保存"}
                     </Button>

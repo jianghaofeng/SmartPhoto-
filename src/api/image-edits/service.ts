@@ -269,7 +269,6 @@ export async function saveEditResultToLocal(
     await db.insert(uploadsTable).values({
       id: savedImageId,
       key: uploadResult.key,
-      size: imageFile.size,
       type: "image",
       url: uploadResult.url,
       userId,

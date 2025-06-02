@@ -16,14 +16,14 @@ import { Button } from "~/ui/primitives/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/ui/primitives/card";
 import { Input } from "~/ui/primitives/input";
 import { Label } from "~/ui/primitives/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/ui/primitives/tabs";
 
 interface ImageEditTaskWithDetails extends ImageEditTask {
+  id: string;
   originalImage: {
     id: string;
     url: string;
   };
-  results: ImageEditResult[];
+  results: (ImageEditResult & { savedImageId?: string })[];
 }
 
 export default function ImageEditPage() {
@@ -43,7 +43,9 @@ export default function ImageEditPage() {
       if (!response.ok) {
         throw new Error("Failed to load tasks");
       }
-      const data = await response.json();
+      const data = (await response.json()) as {
+        data: ImageEditTaskWithDetails[];
+      };
       setTasks(data.data || []);
     } catch (error) {
       console.error("Load tasks error:", error);
@@ -53,6 +55,7 @@ export default function ImageEditPage() {
     }
   };
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     loadTasks();
   }, []);
@@ -77,11 +80,10 @@ export default function ImageEditPage() {
       });
 
       if (!response.ok) {
-        const error = await response.json();
+        const error = (await response.json()) as { error?: string };
         throw new Error(error.error || "编辑失败");
       }
 
-      const result = await response.json();
       alert("编辑任务已创建，请在任务列表中查看进度");
 
       // 切换到任务列表标签页并刷新任务
@@ -129,7 +131,10 @@ export default function ImageEditPage() {
         throw new Error("保存失败");
       }
 
-      const result = await response.json();
+      const result = (await response.json()) as {
+        data?: { savedImageId: string };
+        success: boolean;
+      };
 
       // 更新任务列表中的结果状态
       setTasks((prev) =>
@@ -137,7 +142,10 @@ export default function ImageEditPage() {
           ...task,
           results: task.results.map((r) =>
             r.id === resultId
-              ? { ...r, localImageId: result.data.localImageId }
+              ? ({
+                  ...r,
+                  savedImageId: result.data?.savedImageId,
+                } as ImageEditResult & { savedImageId?: string })
               : r
           ),
         }))
@@ -158,7 +166,10 @@ export default function ImageEditPage() {
         throw new Error("刷新失败");
       }
 
-      const result = await response.json();
+      const result = (await response.json()) as {
+        data?: Partial<ImageEditTaskWithDetails>;
+        success: boolean;
+      };
 
       // 更新任务列表中的特定任务
       setTasks((prev) =>
@@ -192,11 +203,14 @@ export default function ImageEditPage() {
       });
 
       if (!response.ok) {
-        const error = await response.json();
+        const error = (await response.json()) as { message?: string };
         throw new Error(error.message || "上传失败");
       }
 
-      const result = await response.json();
+      const result = (await response.json()) as {
+        data?: { id: string };
+        success: boolean;
+      };
       if (result.success && result.data?.id) {
         setSelectedImageId(result.data.id);
       } else {
@@ -227,7 +241,7 @@ export default function ImageEditPage() {
         <div className="w-64 border-r border-slate-700 bg-slate-800">
           <div className="p-4">
             <div className="space-y-2">
-              <button
+              <Button
                 className={`
                   w-full rounded-lg px-3 py-2 text-left text-sm
                   transition-colors
@@ -243,11 +257,11 @@ export default function ImageEditPage() {
                 onClick={() => setActiveTab("edit")}
               >
                 <div className="flex items-center space-x-2">
-                  <div className="h-2 w-2 rounded-full bg-current"></div>
+                  <div className="h-2 w-2 rounded-full bg-current" />
                   <span>图像编辑</span>
                 </div>
-              </button>
-              <button
+              </Button>
+              <Button
                 className={`
                   w-full rounded-lg px-3 py-2 text-left text-sm
                   transition-colors
@@ -263,10 +277,10 @@ export default function ImageEditPage() {
                 onClick={() => setActiveTab("tasks")}
               >
                 <div className="flex items-center space-x-2">
-                  <div className="h-2 w-2 rounded-full bg-current"></div>
+                  <div className="h-2 w-2 rounded-full bg-current" />
                   <span>任务列表</span>
                 </div>
-              </button>
+              </Button>
             </div>
           </div>
         </div>

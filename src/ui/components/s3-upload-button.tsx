@@ -14,6 +14,7 @@ interface S3UploadButtonProps {
     type: string;
     url: string;
   }) => void;
+  onUploadError?: (error: Error) => void;
 }
 
 export function S3UploadButton({
@@ -22,6 +23,7 @@ export function S3UploadButton({
   className,
   maxSize = 64 * 1024 * 1024,
   onUploadComplete,
+  onUploadError,
 }: S3UploadButtonProps) {
   const [isUploading, setIsUploading] = useState(false);
 
@@ -51,10 +53,11 @@ export function S3UploadButton({
         throw new Error("Upload failed");
       }
 
-      const result = await response.json();
+      const result = (await response.json()) as { data: any };
       onUploadComplete?.(result.data);
     } catch (error) {
       console.error("Upload error:", error);
+      onUploadError?.(error as Error);
       alert("上传失败");
     } finally {
       setIsUploading(false);

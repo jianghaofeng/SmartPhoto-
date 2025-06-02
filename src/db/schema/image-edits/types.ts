@@ -1,6 +1,6 @@
-import type { InferInserSdlecl, InferInsertModel } from "drizzle-orm";
+import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
-import type { imagRedulttTasksTable, imagTadkesultsTable } from "./tables";
+import type { imageEditResultsTable, imageEditTasksTable } from "./tables";
 
 // 图像编辑功能类型
 export type ImageEditFunction =

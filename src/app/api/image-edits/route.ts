@@ -9,7 +9,6 @@ import { auth } from "~/lib/auth";
 
 // 图像编辑任务的请求schema
 const createTaskSchema = z.object({
-  originalImageId: z.string().min(1, "original image id is required"),
   editFunction: z.enum([
     "stylization_all",
     "stylization_local",
@@ -22,42 +21,13 @@ const createTaskSchema = z.object({
     "doodle",
     "control_cartoon_feature",
   ]),
-  prompt: z.string().min(1, "prompt is required").max(800, "prompt too long"),
-  maskImageUrl: z.string().url().optional(),
-  strength: z.number().min(0.1).max(1.0).optional(),
   imageCount: z.number().min(1).max(4).optional(),
+  maskImageUrl: z.string().url().optional(),
+  originalImageId: z.string().min(1, "original image id is required"),
+  prompt: z.string().min(1, "prompt is required").max(800, "prompt too long"),
+  strength: z.number().min(0.1).max(1.0).optional(),
 });
 
-
-// 创建图像编辑任务
-export async function POST(request: NextRequest) {
-  try {
-    // 验证用户身份
-    const session = await auth.api.getSession({ headers: request.headers });
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-    }
-
-    // 解析请求体
-    const body = await request.json();
-    const validatedData = createTaskSchema.parse(body);
-
-    // 创建编辑任务
-    const result = await createImageEditTask(session.user.id, validatedData);
-
-    return NextResponse.json({
-      success: true,
-      data: result,
-    });
-  } catch (error) {
-    return NextResponse.json(
-      {
-        error: error instanceof Error ? error.message : "internal server error",
-      },
-      { status: 500 }
-    );
-  }
-}
 
 // 获取用户的图像编辑任务列表
 export async function GET(request: NextRequest) {
@@ -83,8 +53,8 @@ export async function GET(request: NextRequest) {
     const tasks = await getUserImageEditTasks(session.user.id, limit, offset);
 
     return NextResponse.json({
-      success: true,
       data: tasks,
+      success: true,
     });
   } catch (error) {
     console.error("get image edit tasks error:", error);
@@ -95,3 +65,34 @@ export async function GET(request: NextRequest) {
       { status: 500 },
     );
   }
+}
+
+// 创建图像编辑任务
+export async function POST(request: NextRequest) {
+  try {
+    // 验证用户身份
+    const session = await auth.api.getSession({ headers: request.headers });
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+    }
+
+    // 解析请求体
+    const body = await request.json();
+    const validatedData = createTaskSchema.parse(body);
+
+    // 创建编辑任务
+    const result = await createImageEditTask(session.user.id, validatedData);
+
+    return NextResponse.json({
+      data: result,
+      success: true,
+    });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        error: error instanceof Error ? error.message : "internal server error",
+      },
+      { status: 500 }
+    );
+  }
+}

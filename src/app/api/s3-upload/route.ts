@@ -50,7 +50,6 @@ export async function POST(request: NextRequest) {
       .values({
         id: createId(),
         key: uploadResult.key,
-        size: file.size,
         type: file.type.startsWith("image/") ? "image" : "video",
         url: uploadResult.url,
         userId: session.user.id,

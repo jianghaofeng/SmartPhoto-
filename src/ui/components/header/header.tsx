@@ -29,7 +29,7 @@ export function Header({ showAuth = true }: HeaderProps) {
 
   const mainNavigation = [
     { href: "/", name: "Home" },
-    { href: "/products", name: "Products" },
+    { href: "/generate", name: "Generate" },
   ];
 
   const dashboardNavigation = [
@@ -118,18 +118,18 @@ export function Header({ showAuth = true }: HeaderProps) {
           </div>
 
           <div className="flex items-center gap-4">
-            {!isDashboard &&
+            {/* {!isDashboard &&
               (isPending ? (
                 <Skeleton className={`h-9 w-9 rounded-full`} />
               ) : (
                 <Cart />
-              ))}
+              ))} */}
 
-            {isPending ? (
+            {/* {isPending ? (
               <Skeleton className="h-9 w-9 rounded-full" />
             ) : (
               <NotificationsWidget />
-            )}
+            )} */}
 
             {/* Language Switcher */}
             <LanguageSwitcher />
