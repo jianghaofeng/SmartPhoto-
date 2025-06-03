@@ -4,9 +4,9 @@ import { saveEditResultToLocal } from "~/api/image-edits/service";
 import { auth } from "~/lib/auth";
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     resultId: string;
-  };
+  }>;
 }
 
 // 保存编辑结果到本地存储
@@ -21,7 +21,7 @@ export async function POST(
       return NextResponse.json({ error: "unauthorized" }, { status: 401 });
     }
 
-    const { resultId } = params;
+    const { resultId } = await params;
     if (!resultId) {
       return NextResponse.json({ error: "result id is required" }, { status: 400 });
     }

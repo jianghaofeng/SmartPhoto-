@@ -40,7 +40,7 @@ export default function StripeDemoPage() {
         method: "POST",
       });
 
-      const { url } = await response.json();
+      const { url } = (await response.json()) as { url?: string };
       if (url) {
         window.location.href = url;
       }
@@ -97,9 +97,9 @@ export default function StripeDemoPage() {
           <TabsContent className="space-y-8" value="elements">
             <div
               className={`
-              grid gap-8
-              md:grid-cols-2
-            `}
+                grid gap-8
+                md:grid-cols-2
+              `}
             >
               <Card>
                 <CardHeader>
@@ -163,9 +163,7 @@ export default function StripeDemoPage() {
                 ) : (
                   <Card>
                     <CardContent
-                      className={`
-                      flex h-64 items-center justify-center
-                    `}
+                      className={`flex h-64 items-center justify-center`}
                     >
                       <div className="text-center text-gray-500">
                         <p className="mb-2 text-lg">支付表单将在这里显示</p>
@@ -182,9 +180,9 @@ export default function StripeDemoPage() {
           <TabsContent className="space-y-8" value="checkout">
             <div
               className={`
-              grid gap-8
-              md:grid-cols-2
-            `}
+                grid gap-8
+                md:grid-cols-2
+              `}
             >
               <Card>
                 <CardHeader>
@@ -246,9 +244,9 @@ export default function StripeDemoPage() {
           <TabsContent className="space-y-8" value="payment-link">
             <div
               className={`
-              grid gap-8
-              md:grid-cols-2
-            `}
+                grid gap-8
+                md:grid-cols-2
+              `}
             >
               <Card>
                 <CardHeader>

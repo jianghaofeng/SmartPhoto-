@@ -150,12 +150,12 @@ export default function GeneratePage() {
 
   // 处理上传完成
   const handleUploadComplete = (
-    results: { id: string; key: string; type: string; url: string }[]
+    results: { key: string; type: string; url: string }[]
   ) => {
     console.log("上传完成:", results);
     // 将上传成功的图片添加到已上传列表
     const newImages = results.map((result) => ({
-      id: result.id, // 使用API返回的文件ID，而不是key
+      id: result.key, // 使用key作为id
       name: result.key.split("/").pop() || "未知文件",
       url: result.url,
     }));
@@ -183,8 +183,8 @@ export default function GeneratePage() {
         throw new Error("获取任务状态失败");
       }
 
-      const data = await response.json();
-      const taskResponse = data.data as TaskResponse;
+      const data = (await response.json()) as { data: TaskResponse };
+      const taskResponse = data.data;
 
       setTaskStatus(taskResponse.status);
 
@@ -260,7 +260,10 @@ export default function GeneratePage() {
         throw new Error("获取历史记录失败");
       }
 
-      const data = await response.json();
+      const data = (await response.json()) as {
+        data?: any[];
+        success: boolean;
+      };
 
       if (data.success && data.data) {
         // 转换数据库结果为页面所需格式
@@ -335,7 +338,11 @@ export default function GeneratePage() {
         throw new Error("创建图像编辑任务失败");
       }
 
-      const responseData = await response.json();
+      const responseData = (await response.json()) as {
+        data?: { taskId: string };
+        error?: string;
+        success: boolean;
+      };
 
       if (!responseData.success || !responseData.data) {
         throw new Error("创建任务失败: " + (responseData.error || "未知错误"));

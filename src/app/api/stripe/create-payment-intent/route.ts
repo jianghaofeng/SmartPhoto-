@@ -21,7 +21,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "未授权访问" }, { status: 401 });
     }
 
-    const { amount, currency = "usd", productId } = await request.json();
+    const { amount, currency = "usd", productId } = await request.json() as {
+      amount: number;
+      currency?: string;
+      productId?: string;
+    };
 
     // 验证金额
     if (!amount || amount <= 0) {

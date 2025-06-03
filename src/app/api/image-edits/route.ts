@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 解析请求体
-    const body = await request.json();
+    const body = await request.json() as unknown;
     const validatedData = createTaskSchema.parse(body);
 
     // 创建编辑任务

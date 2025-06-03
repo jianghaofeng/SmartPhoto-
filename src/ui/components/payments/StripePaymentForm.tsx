@@ -93,10 +93,12 @@ export function StripePaymentContainer({
       });
 
       if (!response.ok) {
-        throw new Error((await response.json()).error || "创建支付失败");
+        const errorData = (await response.json()) as { error?: string };
+        throw new Error(errorData.error || "创建支付失败");
       }
 
-      setClientSecret((await response.json()).clientSecret);
+      const data = (await response.json()) as { clientSecret: string };
+      setClientSecret(data.clientSecret);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "创建支付失败";
       setError(errorMessage);

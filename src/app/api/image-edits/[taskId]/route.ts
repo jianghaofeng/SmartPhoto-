@@ -7,9 +7,9 @@ import {
 import { auth } from "~/lib/auth";
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     taskId: string;
-  };
+  }>;
 }
 
 // 删除任务
@@ -24,7 +24,7 @@ export async function DELETE(
       return NextResponse.json({ error: "unauthorized" }, { status: 401 });
     }
 
-    const { taskId } = params;
+    const { taskId } = await params;
     if (!taskId) {
       return NextResponse.json({ error: "task id is required" }, { status: 400 });
     }
@@ -57,7 +57,7 @@ export async function GET(
       return NextResponse.json({ error: "unauthorized" }, { status: 401 });
     }
 
-    const { taskId } = params;
+    const { taskId } = await params;
     if (!taskId) {
       return NextResponse.json({ error: "task id is required" }, { status: 400 });
     }

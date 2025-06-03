@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
-    const data = await request.json();
+    const data = await request.json() as unknown;
 
     // 模拟图片生成过程
     console.log("生成请求参数:", data);
